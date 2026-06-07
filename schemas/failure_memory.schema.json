@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/judgmentops/judgmentops/schemas/failure_memory.schema.json",
+  "title": "Failure Memory Entry",
+  "description": "Structured record of a past failure including the judgment rule that would have prevented it.",
+  "type": "object",
+  "required": [
+    "id",
+    "date",
+    "summary",
+    "agent_behavior",
+    "surface_symptom",
+    "root_judgment_failure",
+    "preventive_rule"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "date": { "type": "string", "format": "date" },
+    "summary": {
+      "type": "string",
+      "description": "One-sentence description of the observed failure"
+    },
+    "agent_behavior": {
+      "type": "string",
+      "description": "What the agent(s) actually did"
+    },
+    "surface_symptom": {
+      "type": "string",
+      "description": "What was noticed first (tests passed, user complaint, audit finding...)"
+    },
+    "root_judgment_failure": {
+      "type": "string",
+      "description": "The missing or violated judgment element (intent, constraint, gate, memory...)"
+    },
+    "preventive_rule": {
+      "type": "string",
+      "description": "The specific rule or check that would have caught or prevented this"
+    },
+    "related_contracts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "related_cases": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "severity": { "type": "string" },
+    "recurrence_count": { "type": "integer", "minimum": 0 },
+    "mitigation_applied": { "type": "string" },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

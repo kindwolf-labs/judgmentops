@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/judgmentops/judgmentops/schemas/redaction_gate.schema.json",
+  "title": "Redaction Gate",
+  "description": "Rules for detecting and removing internal-only information before external delivery.",
+  "type": "object",
+  "required": [
+    "id",
+    "patterns",
+    "replacement",
+    "applies_to"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "patterns": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type", "match"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "path, token, project, custom, etc."
+          },
+          "match": {
+            "type": "string",
+            "description": "Regex or literal pattern (as string)"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "replacement": {
+      "type": "string",
+      "description": "String used to replace matched content, e.g. [REDACTED]"
+    },
+    "applies_to": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Output categories this gate applies to (pr_description, external_prompt, release_note...)"
+    },
+    "report_format": {
+      "type": "string"
+    },
+    "escalation": {
+      "type": "string",
+      "description": "block, require_human, log"
+    }
+  },
+  "additionalProperties": false
+}

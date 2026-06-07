@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/judgmentops/judgmentops/schemas/intent_contract.schema.json",
+  "title": "Intent Contract",
+  "description": "Explicit human intent for a unit of agentic coding work, including scope, success criteria, non-goals, and constraints.",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "source",
+    "scope",
+    "success_criteria",
+    "non_goals",
+    "constraints",
+    "created_at",
+    "author"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this contract (e.g. ic-2025-06-001)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short human-readable name for the work"
+    },
+    "source": {
+      "type": "string",
+      "description": "Origin of the intent (issue URL, note, thread, etc.)"
+    },
+    "scope": {
+      "type": "string",
+      "description": "What is in scope. Must be specific enough that membership is decidable."
+    },
+    "success_criteria": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Observable or measurable conditions that mean the work succeeded"
+    },
+    "non_goals": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicit exclusions. Work must not do these even if locally reasonable."
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "High-level non-negotiable constraints (security, performance, legal, etc.)"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "author": {
+      "type": "string",
+      "description": "Human or role who established the intent"
+    },
+    "priority": {
+      "type": "string"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "reviewers": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

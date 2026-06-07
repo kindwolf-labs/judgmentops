@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/judgmentops/judgmentops/schemas/judgment_case.schema.json",
+  "title": "Judgment Case",
+  "description": "A documented failure mode with scenario, agent behavior, why it failed at the judgment level, and the extracted rule.",
+  "type": "object",
+  "required": [
+    "id",
+    "scenario",
+    "what_agent_did",
+    "why_looked_correct",
+    "why_actually_failed",
+    "judgment_rule",
+    "quality_gate",
+    "failure_memory_entry"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "scenario": { "type": "string" },
+    "what_agent_did": { "type": "string" },
+    "why_looked_correct": { "type": "string" },
+    "why_actually_failed": { "type": "string" },
+    "judgment_rule": { "type": "string" },
+    "quality_gate": { "type": "string" },
+    "failure_memory_entry": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "summary": { "type": "string" },
+        "root_judgment_failure": { "type": "string" },
+        "preventive_rule": { "type": "string" }
+      },
+      "required": ["id", "summary", "root_judgment_failure", "preventive_rule"],
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

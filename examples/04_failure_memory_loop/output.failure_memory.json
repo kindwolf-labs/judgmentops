@@ -1,0 +1,13 @@
+{
+  "id": "fm-2025-06-043",
+  "date": "2025-06-05",
+  "summary": "In-memory profile cache used incomplete invalidation keys and missed mobile + admin update paths, causing widespread stale profile data.",
+  "agent_behavior": "Added a simple TTL cache keyed only by user id and subscribed only to the 'profile:updated' events visible in the web profile module.",
+  "surface_symptom": "Users and support reported stale avatars, names, and roles after profile edits performed outside the web app.",
+  "root_judgment_failure": "No intent contract limited the cache to read-only web surfaces or required an explicit enumeration of all update paths. Failure memory from a similar prior caching incident (fm-2024-09-021) was not consulted. The quality gate only checked 'unit tests in this module pass'.",
+  "preventive_rule": "Any caching layer around user-owned mutable data must (1) declare the full set of read and write surfaces in the intent contract, (2) require cache key and invalidation analysis against all known writers (web, mobile, admin, API, batch jobs), and (3) consult prior failure memory for 'incomplete invalidation' cases before implementation. A human checkpoint is required if the full writer set cannot be enumerated.",
+  "related_cases": ["JC-007", "JC-015"],
+  "severity": "high",
+  "recurrence_count": 2,
+  "tags": ["caching", "invalidation", "cross-surface", "stale-data"]
+}

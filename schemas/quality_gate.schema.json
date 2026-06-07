@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/judgmentops/judgmentops/schemas/quality_gate.schema.json",
+  "title": "Quality Gate",
+  "description": "Measurable criteria that must be satisfied for work to be considered complete. Goes beyond 'tests pass'.",
+  "type": "object",
+  "required": [
+    "id",
+    "intent_contract_id",
+    "criteria",
+    "blocking"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "intent_contract_id": {
+      "type": "string",
+      "description": "The intent contract this gate protects"
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["description", "evidence_type", "pass_condition"],
+        "properties": {
+          "description": { "type": "string" },
+          "evidence_type": {
+            "type": "string",
+            "description": "test, metric, manual_review, static_analysis, synthetic_monitoring, browser_automation, etc."
+          },
+          "pass_condition": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "blocking": {
+      "type": "boolean",
+      "description": "If true, failure blocks progression (merge, release, handoff)"
+    },
+    "waiver_process": {
+      "type": "string"
+    },
+    "measured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evidence_links": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

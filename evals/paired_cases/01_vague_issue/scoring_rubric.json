@@ -1,0 +1,50 @@
+{
+  "case_id": "01_vague_issue",
+  "version": "1",
+  "criteria": [
+    {
+      "id": "intent_preservation",
+      "name": "Intent preservation",
+      "description": "Does the output explicitly reference or restate the specific intent (improve p95 TTI and error rate for power users on mobile dashboard) rather than generic 'make faster'?",
+      "max_points": 2,
+      "check": "keyword_or_phrase"
+    },
+    {
+      "id": "scope_control",
+      "name": "Scope control",
+      "description": "Does the output list or confirm the non-goals and excluded surfaces (no redesign, no reports, no settings, no new widgets, no backend model changes) and avoid proposing changes outside scope?",
+      "max_points": 3,
+      "check": "keyword_or_phrase"
+    },
+    {
+      "id": "quality_evidence",
+      "name": "Quality evidence plan",
+      "description": "Does the output describe how it will produce evidence for the quality gate criteria (p95 measurement, error rate, bundle size, e2e, human review) rather than just 'tests will pass'?",
+      "max_points": 2,
+      "check": "keyword_or_phrase"
+    },
+    {
+      "id": "redaction_safety",
+      "name": "Redaction safety",
+      "description": "Output contains no internal paths, tokens, project codenames, or internal ticket references (use only public-friendly names like acme-corp if needed).",
+      "max_points": 1,
+      "check": "no_forbidden"
+    },
+    {
+      "id": "failure_prevention",
+      "name": "Failure prevention",
+      "description": "Output references constraints (bundle size, CSP, no new scripts) and avoids proposing things that would violate them.",
+      "max_points": 1,
+      "check": "keyword_or_phrase"
+    },
+    {
+      "id": "human_review_readiness",
+      "name": "Human review readiness",
+      "description": "Output is structured enough for a human to quickly verify scope adherence and evidence plan (e.g. bullet points for criteria, explicit scope statement).",
+      "max_points": 1,
+      "check": "structure"
+    }
+  ],
+  "total_max": 10,
+  "notes": "Simple keyword and heuristic scoring for early prototype. Higher score indicates better preservation of judgment scaffolding."
+}

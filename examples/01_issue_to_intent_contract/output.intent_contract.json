@@ -1,0 +1,26 @@
+{
+  "id": "ic-2025-06-042",
+  "title": "Improve main dashboard load performance for power users on mobile",
+  "source": "https://github.com/acme-corp/web-app/issues/4821",
+  "scope": "Main dashboard view (overview cards, recent activity feed, quick stats) for authenticated power users. Mobile viewports (iOS Safari, Chrome Android, 360-428px width). Focus on initial load time-to-interactive and error rate on data fetch. Includes client rendering and the primary API calls that feed the view. Excludes: settings pages, reports, admin surfaces, account creation, and any non-dashboard entry points.",
+  "success_criteria": [
+    "p95 time-to-interactive for the main dashboard on 4G-emulated mobile <= 1400ms for power-user data shape (measured over 50 samples in staging).",
+    "Error rate on initial dashboard data fetch < 0.8% in the target cohort (excluding upstream dependency outages).",
+    "No regression on existing dashboard e2e tests or accessibility (WCAG 2.2 AA) for the view."
+  ],
+  "non_goals": [
+    "Redesign or visual refresh of dashboard components.",
+    "Changes to backend data models or aggregation pipelines beyond read-path caching.",
+    "Performance work on any screen other than the main authenticated dashboard.",
+    "Adding new dashboard widgets or data sources."
+  ],
+  "constraints": [
+    "Must not increase gzipped JS bundle for the dashboard route by more than 4KB.",
+    "Must continue to satisfy existing CSP, rate limiting, and data residency rules.",
+    "No new third-party domains or scripts may be introduced on the dashboard critical path."
+  ],
+  "created_at": "2025-06-07T09:15:00Z",
+  "author": "product-eng-lead-acme",
+  "reviewers": ["frontend-platform", "mobile-eng-lead"],
+  "notes": "Power users defined as accounts with > 250 entities or > 5k events in last 90 days. Use the existing power-user data shape generator in staging."
+}

@@ -1,0 +1,46 @@
+{
+  "id": "rr-2025-06-07-03",
+  "input_source": "examples/03_external_prompt_redaction/input.md",
+  "applied_gate": "rg-2025-06-003",
+  "matches": [
+    {
+      "pattern_type": "path",
+      "matched_length": 63,
+      "replacement": "[REDACTED_INTERNAL_PATH]",
+      "severity": "high"
+    },
+    {
+      "pattern_type": "project",
+      "matched_length": 56,
+      "replacement": "[REDACTED]",
+      "severity": "high"
+    },
+    {
+      "pattern_type": "project",
+      "matched_length": 39,
+      "replacement": "[REDACTED_INTERNAL_HOST]",
+      "severity": "high"
+    },
+    {
+      "pattern_type": "token",
+      "matched_length": 62,
+      "replacement": "[REDACTED_TOKEN]",
+      "severity": "critical"
+    },
+    {
+      "pattern_type": "project",
+      "matched_length": 18,
+      "replacement": "[REDACTED]",
+      "severity": "medium"
+    },
+    {
+      "pattern_type": "internal_comment",
+      "matched_length": 53,
+      "replacement": "[REDACTED_INTERNAL_CONTEXT]",
+      "severity": "medium"
+    }
+  ],
+  "output_redacted": "examples/03_external_prompt_redaction/output.redacted.md",
+  "human_review_required": true,
+  "notes": "All private workstation locations, hostnames, tokens, and project codenames were replaced. The resulting example uses only clearly fictional 'example-*' names and test placeholders. Human must confirm no subtle leakage remains before publishing."
+}

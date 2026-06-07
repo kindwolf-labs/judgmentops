@@ -1,0 +1,33 @@
+{
+  "id": "qg-2025-06-042",
+  "intent_contract_id": "ic-2025-06-042",
+  "criteria": [
+    {
+      "description": "p95 dashboard TTI target on mobile 4G for power-user shape",
+      "evidence_type": "synthetic_monitoring",
+      "pass_condition": "p95 <= 1400ms over 50 samples using power-user fixture in staging"
+    },
+    {
+      "description": "Dashboard data fetch error rate under load",
+      "evidence_type": "synthetic_monitoring",
+      "pass_condition": "error rate < 0.8% over 200 requests with power-user fixture and 4G throttling"
+    },
+    {
+      "description": "No bundle size regression on dashboard route",
+      "evidence_type": "static_analysis",
+      "pass_condition": "gzipped dashboard chunk delta <= +4KB vs baseline (measured by build artifact diff)"
+    },
+    {
+      "description": "Critical user path review on mobile",
+      "evidence_type": "manual_review",
+      "pass_condition": "Signed off by mobile product reviewer with attached session recording showing load under power-user data"
+    },
+    {
+      "description": "Existing dashboard e2e suite still green",
+      "evidence_type": "test",
+      "pass_condition": "All dashboard e2e tests pass in CI on the change branch"
+    }
+  ],
+  "blocking": true,
+  "measured_at": "2025-06-07T10:40:00Z"
+}
