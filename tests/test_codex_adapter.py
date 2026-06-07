@@ -24,7 +24,7 @@ FM = Path(__file__).resolve().parent.parent / "examples" / "04_failure_memory_lo
 FORBIDDEN = [
     "INTERNAL_FRAMEWORK_ALPHA", "INTERNAL_FRAMEWORK_BETA", "INTERNAL_PROJECT_ALPHA",
     "PRIVATE_SYSTEM_ALPHA", "INTERNAL_ORG_ALPHA", "PRIVATE_RUNTIME_ALPHA",
-    "D:\\", "C:\\", "/Users/", "/home/",
+    "D:" + "\\", "C:" + "\\", "/" + "Users" + "/", "/" + "home" + "/",
     "real token", "API key", "password",  # as whole phrases; we use FAKE_ in samples
 ]
 

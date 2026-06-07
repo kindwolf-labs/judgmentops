@@ -20,7 +20,7 @@ The project is deliberately positioned as infrastructure that sits *above* codin
 
 - **It is not a coding assistant.** It does not generate code, complete functions, or drive an edit loop. It supplies the judgment context that a coding assistant or agent should respect.
 - **It is not a prompt collection or "better system prompt" library.** The artifacts are structured (JSON schemas, versioned contracts, queryable memory) rather than free-form text that must be re-interpreted by each model on every turn.
-- **It is not a replacement for Codex, GitHub Copilot, Claude Code, Cursor, or any other generation-focused tool.** It is designed to make those systems more reliable when used for extended tasks, maintenance, migrations, and production software work.
+- **It is not a replacement for Codex, GitHub Copilot, or any other generation-focused tool.** It is designed to make those systems more reliable when used for extended tasks, maintenance, migrations, and production software work.
 - **It is not a general agent framework.** It does not define tool calling loops, memory architectures, or orchestration. It defines only the narrow judgment surface that many such frameworks could usefully consume.
 - **It is not a security or compliance product.** Redaction gates and quality gates are best-effort, illustrative, and always require human review before external delivery or high-stakes automation. The project explicitly disclaims any guarantee of correctness or completeness.
 - **It is not an internal or company-specific framework.** All cases, examples, and schemas use only neutral, fictional data. The project is intended for broad public adoption and contribution.

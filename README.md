@@ -1,104 +1,180 @@
 # JudgmentOps
 
-**JudgmentOps is the control plane for what a coding agent is allowed to do, what "done" means, and what it must remember.**
+**An open-source AI Agent Operating Protocol for converting natural-language goals into auditable, repeatable, and self-improving execution workflows.**
 
-It is not another coding agent. It is an open protocol for preserving human judgment across long-running agent work through versioned intent contracts, quality gates, redaction rules, and failure memory.
+## Why This Matters
 
-Coding agents can produce correct code and still complete the wrong task. They lose constraints between turns, optimize for tests instead of user outcomes, expose private context in public artifacts, and repeat failures that the organization already paid to learn from.
+AI models are becoming stronger, but complex work performed across many steps, tools, and review cycles remains unreliable. A model can produce a plausible result while losing the original goal, crossing a boundary, overlooking a user outcome, or repeating a failure that was already discovered.
 
-- Implicit requirements and boundaries are lost between turns
-- "Do not touch X" constraints are silently ignored
-- Tests pass while user experience and business goals do not
-- Private or sensitive context leaks into external artifacts
-- The same class of mistake is repeated because there is no structured memory of prior failures
-- Human strategic intent is diluted across long-running, multi-agent workflows
+One-off prompts are difficult to audit, repeat, improve, and transfer. Individuals, maintainers, and small teams need a practical way to turn AI from a chat tool into a governed execution system.
 
-**Generation answers "can the agent make a change?" JudgmentOps answers "is this the right change, within the right boundaries, with evidence that it is safe to ship?"**
+JudgmentOps explores that missing protocol layer. It represents goals, constraints, evidence, review, and prior lessons as explicit artifacts that humans can inspect and agents can consume.
 
-## What JudgmentOps Provides
+## What This Project Is
 
-JudgmentOps is an open-source judgment layer for agentic coding. It converts high-level human judgment into machine-actionable artifacts that coding agents can consume and respect:
+JudgmentOps is:
 
-1. **Intent Contract** — Explicit scope, success criteria, non-goals, and execution boundaries derived from human input.
-2. **Quality Gate** — Measurable criteria that must be satisfied before work is considered complete. Goes beyond "tests pass."
-3. **Redaction Gate** — Rules and detection for preventing leakage of private locations, credentials, project names, and commentary into external outputs.
-4. **Failure Memory** — Structured, queryable records of past failures, their root causes, and the judgment rules that would have prevented them.
-5. **Judgment Casebook** — A growing collection of concrete evaluation scenarios with precise judgment rules extracted from them.
-6. **Agent Adapter Layer** — Conventions and hooks so that existing agents (Codex, Copilot, Claude, Cursor, custom agents) can ingest contracts, gates, and memory without rewriting their core loops.
+- A protocol for governing long-running agentic work.
+- A set of schemas for contracts, gates, and failure memory.
+- A small runner and evaluation suite for repeatable before-and-after tests.
+- A thin adapter for exporting protocol artifacts into agent-readable repository guidance.
 
-## Quick Example
+JudgmentOps is not:
 
-Given a vague GitHub issue:
+- A chatbot.
+- A conventional SaaS application.
+- A blockchain smart contract.
+- A replacement for an AI coding agent.
+- Merely a prompt library.
 
-> "The login page is slow and sometimes errors on mobile."
+It sits around an agent's execution loop and makes the human goal, operating boundaries, acceptance evidence, and learned failure rules explicit.
 
-JudgmentOps produces:
+## What Problems It Addresses
 
-- An Intent Contract that narrows scope to measurable performance and error conditions on specific flows, declares non-goals, and sets explicit success metrics.
-- A Quality Gate that requires p95 latency targets, error budget, mobile viewport testing, and human sign-off on the critical user path.
-- Redaction and failure memory checks before any external delivery.
+| Problem | Protocol response |
+| --- | --- |
+| Prompt drift | Execution contracts that preserve goal, scope, and non-goals |
+| Context loss | A memory layer for durable project and task context |
+| Inconsistent outputs | Quality gates with observable acceptance evidence |
+| Single-agent blind spots | Multi-agent or independent review checkpoints |
+| Repeated failures | Failure memory that turns defects into preventive rules |
+| Private data leakage risk | Public/private boundary rules and redaction gates |
+| Non-reproducible work | Structured task specifications and acceptance gates |
 
-The agent is no longer free to "improve login however it sees fit."
+## Core Concepts
 
-## Repository Map
+### Execution Contract
 
+A versioned statement of the goal, scope, constraints, non-goals, required outputs, and definition of success for a unit of work. In the current protocol, the Intent Contract is the primary execution contract.
+
+### Memory Layer
+
+Durable context that should survive a single chat session, such as project rules, prior decisions, known risks, and relevant failure history.
+
+### Skill Layer
+
+Reusable procedures for recurring work. A skill defines how an agent should perform a task without hiding the governing goal or acceptance criteria.
+
+### Quality Gate
+
+A blocking checklist of evidence required before work is accepted. Tests can be part of a gate, but product behavior, reviewability, safety, and human approval may also be required.
+
+### Multi-Agent Review
+
+An independent review step performed by another agent configuration or review pass. Its purpose is to expose assumptions and failure modes that the executing agent may have missed.
+
+### Failure Memory
+
+A structured record of what failed, why local behavior appeared reasonable, and which rule or check should prevent recurrence.
+
+### Public/Private Boundary
+
+Explicit rules for what may cross a trust boundary. Redaction gates inspect candidate public artifacts for private locations, credentials, project identifiers, and process commentary.
+
+### Human Judgment Layer
+
+The set of goals, constraints, exceptions, quality definitions, and prior lessons that determine whether an output is correct for the real situation, not merely plausible in isolation.
+
+## Example Use Cases
+
+- **Long-form writing workflow:** preserve audience, thesis, evidence requirements, review stages, and revision history.
+- **Game prototype development and review:** define the playable goal, performance boundaries, review checkpoints, and acceptance evidence.
+- **Business analysis report generation:** require source quality, assumptions, counterarguments, and executive-review criteria.
+- **Open-source project preparation:** coordinate documentation, licensing, privacy review, tests, and release readiness.
+- **AI news-to-article workflow:** separate source collection, verification, drafting, editorial review, and publication boundaries.
+- **Local model or external agent evaluation:** run the same task with and without protocol artifacts and compare observable outcomes.
+
+## Example Workflow
+
+1. A human states a goal.
+2. The system converts it into a TaskSpec or Execution Contract.
+3. An agent executes under the declared constraints.
+4. A Quality Gate reviews the output and required evidence.
+5. Failure Memory records defects and the rules that would prevent them.
+6. The next run retrieves those lessons and improves from prior results.
+
+A minimal public example is available in [`examples/simple_task_contract.md`](examples/simple_task_contract.md).
+
+## Why This Is Different From Prompt Engineering
+
+Prompt engineering improves an individual interaction. JudgmentOps focuses on persistent work systems: memory, auditability, governance, review, failure learning, and repeatability.
+
+The unit of value is not a single prompt. It is a repeatable execution loop whose inputs, boundaries, evidence, and lessons can be inspected and improved over time.
+
+## What Reviewers Can Inspect
+
+- [`docs/PROTOCOL.md`](docs/PROTOCOL.md): the protocol elements and their fields.
+- [`schemas/`](schemas/): machine-readable contracts for core artifacts.
+- [`docs/CASEBOOK.md`](docs/CASEBOOK.md): 20 concrete judgment-failure scenarios.
+- [`evals/`](evals/): three paired evaluation fixtures and a transparent scoring runner.
+- [`adapters/codex/`](adapters/codex/): a thin adapter that exports active contracts and gates as repository guidance.
+- [`examples/`](examples/): worked protocol artifacts and a minimal task contract.
+- [`docs/REVIEWER_BRIEF.md`](docs/REVIEWER_BRIEF.md): a one-page, forwardable project brief.
+
+## Try The Current Prototype
+
+List the paired evaluation cases:
+
+```bash
+python evals/run_eval.py --list
 ```
-judgmentops/
-├── README.md
-├── docs/
-│   ├── MANIFESTO.md
-│   ├── PROTOCOL.md
-│   ├── CASEBOOK.md
-│   ├── OPENAI_APPLICATION.md
-│   ├── GOOGLE_APPLICATION.md
-│   ├── MICROSOFT_APPLICATION.md
-│   ├── ONE_PAGER.md
-│   ├── PITCH_EMAIL.md
-│   ├── ROADMAP.md
-│   └── POSITIONING.md
-├── schemas/
-│   ├── intent_contract.schema.json
-│   ├── quality_gate.schema.json
-│   ├── failure_memory.schema.json
-│   ├── redaction_gate.schema.json
-│   └── judgment_case.schema.json
-├── examples/
-│   ├── 01_issue_to_intent_contract/
-│   ├── 02_pr_review_judgment_gate/
-│   ├── 03_external_prompt_redaction/
-│   ├── 04_failure_memory_loop/
-│   └── 05_product_failure_despite_tests/
-├── cli/
-│   └── judgmentops.py
-├── tests/
-│   └── test_schemas.py
-└── .github/workflows/lint.yml
+
+Run the test suite:
+
+```bash
+python tests/test_schemas.py
+python -m unittest discover -s tests -p "test_*.py"
 ```
 
-## Status
+Export an active contract and quality gate into agent-readable context:
 
-Early public prototype. The core value is the judgment framework, casebook, and protocol — not the demonstration CLI.
+```bash
+python adapters/codex/export_codex_task.py \
+  --intent-contract examples/01_issue_to_intent_contract/output.intent_contract.json \
+  --quality-gate examples/01_issue_to_intent_contract/output.quality_gate.json \
+  --failure-memory examples/04_failure_memory_loop/output.failure_memory.json \
+  --out-dir ./generated-agent-context
+```
 
-## Safety and Scope
+All current processing is local. The prototype does not make network calls.
 
-- Local-first by default. No data leaves your machine unless you explicitly export.
-- Redaction is best-effort and requires human review before any external sharing.
-- Never commit secrets, private company data, customer data, or internal prompts to this repository or any shared case.
+## Current Status
 
-See SECURITY.md for responsible use.
+- Early-stage protocol and workflow prototype.
+- Exercised across multiple task types represented by the casebook, worked examples, and paired fixtures.
+- Includes schemas, a deterministic demonstration CLI, a paired evaluation runner, and an agent adapter.
+- Not yet a polished end-user product or a validated reliability benchmark.
+- Seeking feedback, compute/API credits, and collaboration to evaluate reliability at larger scale.
 
-Contributions that improve the judgment cases, protocol precision, or evaluation harnesses are especially welcome.
+Claims should remain proportional to the evidence: the repository demonstrates a testable protocol direction, not a proven universal solution.
 
-## Runnable Evaluation Prototype
+## Roadmap
 
-JudgmentOps now includes a minimal paired evaluation harness under `evals/`.
+- Cleaner CLI runner.
+- More example contract templates.
+- Public end-to-end demo workflows.
+- Broader evaluation suite with published model runs.
+- Multi-agent review harness.
+- Documentation and onboarding improvements.
+- Case-study reports with methods, limitations, and negative results.
 
-- Three concrete paired cases (vague performance task, PR review with data/audit risk, external prompt redaction).
-- Each case has a raw baseline prompt and a judgmentops_prompt that includes the relevant Intent Contract, Quality Gate, Redaction Gate, and/or Failure Memory.
-- `evals/run_eval.py --list` shows cases.
-- `evals/run_eval.py --case <id> --baseline-output <file> --judgmentops-output <file>` validates the case and runs simple rule-based scoring on the two agent outputs (intent preservation, scope control, quality evidence, redaction safety, failure prevention, human review readiness).
-- Goal: enable reproducible before/after experiments that measure whether judgment scaffolding changes agent behavior on the same task. Early, transparent, and rule-based — not a full benchmark claim yet.
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the current 30/60/90-day plan.
 
-See `evals/README.md` and the scoring_rubrics for details.
+## For Reviewers
 
-The Codex adapter (`adapters/codex/`) exports an active contract + gate (+ memory) as `AGENTS.md` and `CODEX_TASK.md` that can be fed directly to Codex.
+If you are reviewing this project for an AI, open-source, or research support program, the key question is not whether this is a finished app. The key question is whether AI work needs a protocol layer for reliable long-running execution. This repository is an early attempt to make that layer explicit, testable, and open.
+
+Start with the [Reviewer Brief](docs/REVIEWER_BRIEF.md), then inspect the [protocol](docs/PROTOCOL.md), [paired evaluations](evals/), and [adapter](adapters/codex/).
+
+## Safety And Scope
+
+- Local-first by default.
+- Redaction is best-effort and requires human review before external sharing.
+- Do not commit credentials, customer data, proprietary code, private prompts, or unreleased plans.
+- High-impact work should retain explicit human approval checkpoints.
+
+See [`SECURITY.md`](SECURITY.md) for responsible-use guidance.
+
+## License And Contributions
+
+JudgmentOps is licensed under Apache-2.0. Contributions that improve protocol precision, evaluation quality, adapters, or concrete failure cases are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md).

@@ -23,7 +23,7 @@ An open-source (Apache-2.0), model- and vendor-agnostic judgment layer that turn
 
 - Not a coding assistant or agent framework.
 - Not a prompt library.
-- Not a replacement for Codex, Copilot, Claude, Cursor, or any generation model.
+- Not a replacement for Codex, Copilot, or any other generation-focused agent.
 - Not a security product or guaranteed redaction solution.
 
 It is scaffolding that makes those systems more reliable for the kind of work that actually ships and maintains production software.
