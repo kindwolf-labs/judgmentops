@@ -1,0 +1,82 @@
+name: Existing cloud interface check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/existing-cloud-deployments.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  cloud-interfaces:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check already deployed public interfaces
+        shell: bash
+        run: |
+          python - <<'PY'
+          import datetime
+          import json
+          import pathlib
+          import sys
+          import urllib.request
+
+          targets = {
+              'catalog': 'https://3f343.com/data/catalog.json',
+              'manifest': 'https://3f343.com/api/v1/manifest',
+              'health': 'https://3f343.com/api/v1/health',
+          }
+          results = []
+          for name, url in targets.items():
+              result = {'name': name, 'url': url, 'passed': False}
+              try:
+                  req = urllib.request.Request(url, headers={
+                      'User-Agent': 'JudgmentOps-interface-check/1.0',
+                      'Accept': 'application/json',
+                  })
+                  with urllib.request.urlopen(req, timeout=20) as response:
+                      if response.status != 200:
+                          raise ValueError('Non-200 response')
+                      body = response.read(4000001)
+                  if len(body) > 4000000:
+                      raise ValueError('Response exceeds check size limit')
+                  data = json.loads(body)
+                  if not isinstance(data, dict):
+                      raise ValueError('Expected a JSON object')
+                  if name == 'catalog' and not isinstance(data.get('stats'), dict):
+                      raise ValueError('Catalog stats missing')
+                  if name == 'manifest':
+                      if data.get('canonical') != 'https://3f343.com/':
+                          raise ValueError('Canonical URL mismatch')
+                      if not isinstance(data.get('endpoints'), dict):
+                          raise ValueError('Endpoints missing')
+                  if name == 'health':
+                      if data.get('service') != 'ok' or data.get('upstream') != 'ok':
+                          raise ValueError('Service or upstream unhealthy')
+                  result['passed'] = True
+              except Exception as exc:
+                  result['reason'] = str(exc)[:240]
+              print(json.dumps(result))
+              results.append(result)
+          report = {
+              'checked_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'checks': results,
+              'passed': all(item['passed'] for item in results),
+              'scope': 'Read-only interface checks, not game QA or autonomous delivery',
+          }
+          pathlib.Path('existing-cloud-check.json').write_text(
+              json.dumps(report, indent=2) + '\n', encoding='utf-8'
+          )
+          sys.exit(0 if report['passed'] else 1)
+          PY
+      - name: Record verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: existing-cloud-check
+          path: existing-cloud-check.json
+          retention-days: 7
+          if-no-files-found: error
